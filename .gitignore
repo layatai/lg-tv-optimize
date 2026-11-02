@@ -1,0 +1,20 @@
+# Local device state must never be published.
+references/local-tv.md
+private/
+backups/
+evidence/
+logs/
+.ssh/
+.env
+.env.*
+*.key
+*.pem
+*.ipk
+*.tar
+*.tar.gz
+*.tgz
+
+# Local tooling and OS files.
+.DS_Store
+__pycache__/
+*.pyc
