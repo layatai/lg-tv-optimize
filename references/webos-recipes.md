@@ -134,6 +134,19 @@ Preserve readiness checks while reducing delay. Test cold boot, duplicate Active
 
 The fork README also documents EIM input registration for last-input autostart. It can keep YouTube resident and increase idle memory use; do not enable it in addition to a working power-on hook without explaining and approving that trade-off.
 
+### Disable or re-enable the custom launcher
+
+- Keep this separate from app installation, remote mappings, privacy settings, and Quick Start+. Native LG last-input/app restoration is independent of a custom launch hook.
+- Before disabling, back up and verify the live hook/helper, record the exact worker command/PID, and preserve unrelated hooks. Move the hook **outside init.d**; merely renaming it to `.disabled` inside that directory might not prevent Homebrew from executing it.
+- Stop only the verified worker and confirm its child power-state subscription exits. Remove a stale PID/lock only after exit. Keeping the helper file for diagnostic imports or rollback does not itself enable autostart.
+- Re-enable only on an explicit request. Check for a replacement hook or newer configuration, compare archived/live helper checksums, and preserve executable permissions. Stage the verified hook outside init.d before restoring it atomically; do not overwrite newer work.
+- Restoring a hook without running it enables the **next full startup**, not necessarily the next warm wake. The worker starts at that full startup and can then handle later warm wakes. State this activation boundary clearly.
+- Starting the worker immediately while power is Active can foreground YouTube. Obtain the appropriate app-switch approval rather than silently interrupting viewing, and do not reboot just to activate a requested configuration.
+- Verify executable hook presence, worker state, current-boot launch logs, and foreground app separately. A restored hook with no worker yet is expected before its next startup; a foreground YouTube app alone may be native restoration rather than proof of custom autostart.
+- Do not use a broad performance/privacy rollback merely to toggle this launcher. Preserve Quick Start+ off if that is the user's choice; the custom hook does not require it to be on.
+
+For controlled wake comparisons, physical-display evidence, and the separate UI-control operation, read [Quick Start+ and display diagnosis](quick-start-plus.md).
+
 ## Remote mappings and local-only configuration
 
 LG Input Hook 1.5.1 used `/home/root/.config/lginputhook/keybinds.json`. Merge only approved keys; preserve all others. The tested mappings were:

@@ -1,7 +1,7 @@
 ---
 name: lg-tv-optimize
 license: MIT
-description: Diagnose and conservatively optimize LG webOS TVs for responsiveness, startup speed, privacy, and background activity. Use for a slow LG TV, webOS CPU/RAM/swap analysis, reducing LG promotions or diagnostics, YouTube AdFree installation or autostart, custom TV apps and shortcut badges, Developer Mode renewal, app cleanup, audio troubleshooting, scoped update blocking, remote-button remapping, and root-safe Homebrew maintenance. Requires measurement, backups, scoped approval, feature preservation, and rollback; never blindly disables services or changes swap.
+description: Diagnose and conservatively optimize LG webOS TVs for responsiveness, startup speed, privacy, and background activity. Use for a slow LG TV, webOS CPU/RAM/swap analysis, reducing LG promotions or diagnostics, YouTube AdFree installation or autostart, custom TV apps and shortcut badges, Developer Mode renewal, app cleanup, audio troubleshooting, Quick Start+ UI controls, black-screen/wake diagnosis, scoped update blocking, remote-button remapping, and root-safe Homebrew maintenance. Requires measurement, backups, scoped approval, feature preservation, and rollback; never blindly disables services or changes swap.
 compatibility: LG webOS TVs; read-only diagnosis can use existing authorized access. Root-only changes require an already-rooted TV with Homebrew Channel and SSH. Older TVs may run Python 2.7 and Upstart.
 ---
 
@@ -18,12 +18,14 @@ Read the additional reference for the task in progress. Do not load or apply eve
 | Developer Mode setup, deployment, renewal, or installation lifetime | [Developer Mode](references/developer-mode.md) |
 | Older-browser app compatibility, visible shortcut badges, remote navigation, video handoff, or silence | [TV apps and audio](references/tv-apps-and-audio.md) |
 | Selected app removal, promotional shortcuts, or per-TV network filtering | [App cleanup and network rules](references/app-cleanup-and-network.md) |
+| Quick Start+ / Khởi động nhanh+, a greyed-out switch, or black-screen/wake diagnosis | [Quick Start+ and display diagnosis](references/quick-start-plus.md) |
 
 ## Non-negotiable safety boundaries
 
 - Start read-only. Explain proposed writes and obtain approval for a new change plan. An explicit request to install a named app, schedule renewal, fix the reported audio issue, or implement an already-approved plan authorizes that scoped work. Reuse that authorization instead of asking again. Obtain separate approval for unrelated changes, scope expansion, or an unapproved disruptive operation such as rebooting.
 - Preserve HDMI, networking/DNS/proxy support, Bluetooth, audio, accessibility, casting, application management, the compositor, system IPC, security services, and local crash handling. Preserve user apps and existing customizations.
-- AirPlay/HomeKit removal, Quick Start+ changes, firmware-update blocking, and DNS/network-wide blocking are separate opt-in decisions. Explain their feature/security trade-offs first.
+- AirPlay/HomeKit removal, Quick Start+ changes, firmware-update blocking, and DNS/network-wide blocking are separate opt-in decisions. Explain their feature/security trade-offs first. Turning Quick Start+ off and disabling its UI control are distinct requests; preserve the user's current choice when changing app startup.
+- Separate software power/display status, screenshots, and command acknowledgements from physical picture output; reboot recovery alone does not identify a black-screen cause. A disabled UI control is not a root/API security lock or proof of reboot persistence.
 - Do not delete/rename LG system binaries, remount system partitions writable, factory-reset, casually revoke required Smart TV agreements, or disable services based only on their names.
 - Do not `swapoff`, resize live zram, add internal-flash swap, drop caches as an optimization, or kill the active renderer to manufacture free RAM. Investigate existing swap composition first.
 - On a rooted Homebrew TV, do not reinstall LG Developer Mode or “repair” the intentionally directory-shaped `/var/luna/preferences/devmode_enabled`. Rooting/re-rooting needs a separate, device-specific request and current compatibility research.
@@ -64,6 +66,7 @@ Candidates, only where supported and relevant:
 - Renew an active Developer Mode session through LG, verify the timer, and schedule only the tested command with private token storage.
 - Remove only explicitly selected apps, preserving exceptions. Treat hidden promotional inventory entries as unresolved until removal is verified.
 - Diagnose mute and volume at both TV and player layers before changing output or resetting settings.
+- Compare Quick Start+ wake behavior one variable at a time only when requested. If the user separately wants its switch greyed out, validate and back up the native UI descriptor rather than patching the Settings app or adding a watchdog.
 
 Stop and ask before expanding scope. An unidentified service stays enabled.
 
@@ -76,7 +79,7 @@ Before the first write:
 
 Apply temporary changes first where supported; check the operation-specific response as well as command exit status. Luna and SSAP commonly return `returnValue`; the tested LG renewal endpoint used `result: "success"` and a separate remaining-time check. Test core features and the reported symptom before persisting anything. Preserve unknown settings and existing hooks. If a command times out or SSH disconnects, inspect live state before retrying a potentially completed operation.
 
-For rooted TV maintenance, persist only approved, validated changes through the existing Homebrew hook mechanism. Use explicit PATH/absolute command paths, the TV's actual Python version, bounded waits, meaningful logs, and duplicate-run protection. A diagnostics cleanup worker should exit after boot cleanup, not become a resident polling daemon. A power-on app worker must not force the app back after normal app switching.
+Prefer the settings service's own persistence for native settings and UI metadata; do not add a startup hook just to repeat a metadata write. For approved custom workers on rooted TVs, use the existing Homebrew hook mechanism. Use explicit PATH/absolute command paths, the TV's actual Python version, bounded waits, meaningful logs, and duplicate-run protection. A diagnostics cleanup worker should exit after boot cleanup, not become a resident polling daemon. A power-on app worker must not force the app back after normal app switching.
 
 For unrooted Developer Mode deployments, use the authorized CLI workflow. Persist renewal only through the approved host scheduler described in [Developer Mode scheduling](references/developer-mode.md#schedule-and-verify-renewal). Do not install Homebrew or create root-only TV startup hooks for these tasks.
 

@@ -7,6 +7,7 @@ It guides a coding agent through diagnosing responsiveness problems, making smal
 ## What it covers
 
 - CPU, RAM, swap/zram, storage, boot, and app-switch diagnostics.
+- Quick Start+ wake comparisons and reversible UI-switch disabling, with firmware-schema checks and careful black-screen diagnosis.
 - Supported settings for optional LG collection and promotions.
 - Review and temporary testing of optional diagnostics services.
 - Compatible YouTube AdFree fork installation and updates.
@@ -48,6 +49,7 @@ Other example requests:
 /skill:lg-tv-optimize Inspect memory and swap without changing anything
 /skill:lg-tv-optimize Install a compatible NicholasBly YouTube AdFree release
 /skill:lg-tv-optimize Review my existing boot helper and remote mappings
+/skill:lg-tv-optimize Inspect Quick Start+ and explain how to disable its UI switch safely
 /skill:lg-tv-optimize Keep my active Developer Mode session renewed automatically
 /skill:lg-tv-optimize Diagnose missing YouTube sound without changing my soundbar output
 /skill:lg-tv-optimize Adapt my web app to this TV and show working shortcut badges
@@ -74,6 +76,7 @@ An agent must establish the actual model, firmware, capabilities, and user requi
 
 - [`SKILL.md`](SKILL.md): scope, safety boundaries, workflow, and reporting requirements.
 - [`references/webos-recipes.md`](references/webos-recipes.md): APIs, firmware-specific examples, compatibility notes, and implementation pitfalls.
+- [`references/quick-start-plus.md`](references/quick-start-plus.md): feature off versus UI disabled, native descriptor validation/rollback, display evidence, and controlled wake comparisons.
 - [`references/developer-mode.md`](references/developer-mode.md): deployment, secure renewal, scheduler verification, and installation lifetime.
 - [`references/tv-apps-and-audio.md`](references/tv-apps-and-audio.md): older browser engines, shortcut badges, media handoff, inspector limits, and audio diagnosis.
 - [`references/app-cleanup-and-network.md`](references/app-cleanup-and-network.md): verified app removal, promotions, and scoped update blocks with rollback.
